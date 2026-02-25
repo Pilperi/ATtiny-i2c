@@ -8,3 +8,6 @@ build/
 *.bk
 *.temp
 temp
+
+# Koodausohjelmajutut
+.vscode/
