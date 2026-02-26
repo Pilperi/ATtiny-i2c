@@ -1,10 +1,23 @@
 # 2026-02-21
 #
-# Lisäksi tarjolla:
+# Makefile i2c-testikoodin kääntämiseen, debuggaamiseen ja sirulle ohjelmointiin.
+# Oletustargetti `all`, joka kasaa binäärin määritellyistä .S- ja .c-tiedostoista.
+#
+# Valinta C-toteutuksen ja assembly-toteutuksen välillä tehdään muuttujilla
+# O_OBJECTS_FROM_C ja O_OBJECTS_FROM_S
+# Kaikki koodi käännetään, mutta lopulliset käytettävät .o-objektit voi valita.
+#
+# Binääri linkataan uusiksi joka kerta.
+#
+# Lisäksi tarjolla moodit:
 #	- clean : poistaa luodut .o
 #	- clear : poistaa koko buildikansion sisällön
 #	- show  : listaa lähde- ja kohdetiedostot ja printtaa käännöksen disassemblyn
 #	- send  : lähettää tulosbinäärin avrdudella sirulle
+#
+# Eli aika käyttökelpoinen combo on
+# make all send show
+# joka kääntää, lähettää laitteelle ja näyttää tuloksen deassemblyn.
 
 
 #########################################################################
@@ -54,7 +67,7 @@ S_FILENAMES := $(notdir $(S_SOURCES))
 C_OBJECTS := $(addprefix $(KOHDEKANSIO)/,$(C_FILENAMES:%.c=%.c.o))
 S_OBJECTS := $(addprefix $(KOHDEKANSIO)/,$(S_FILENAMES:%.S=%.S.o))
 
-#O_OBJECTS_FROM_C = $(KOHDEKANSIO)/main.o
+# Mitkä tulokset otetaan C-koodista ja mitkä assemblystä
 O_OBJECTS_FROM_C = $(KOHDEKANSIO)/main.o
 O_OBJECTS_FROM_S = $(KOHDEKANSIO)/isr.o $(KOHDEKANSIO)/i2c.o $(KOHDEKANSIO)/init.o
 

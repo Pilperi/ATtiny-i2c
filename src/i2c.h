@@ -10,6 +10,13 @@
 #define I2C_PIN_SCL PINB2
 #define I2C_CLOCK_STANDARD 5
 
+/* Lähetä databufferi laitteelle
+
+1. Bufferin osoite
+2. Bufferin koko tavuina
+3. Laiteosoite
+4. Kirjoitusosoite laiteella
+*/
 void i2c_laheta_buffer(uint8_t*, uint8_t, uint8_t, uint8_t);
 void i2c_laheta(void);
 void i2c_lue(void);

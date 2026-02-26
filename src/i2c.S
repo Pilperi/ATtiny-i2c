@@ -1,5 +1,6 @@
 #define __SFR_OFFSET 0
 #include <avr/io.h>
+
 #define I2C_PIN_SDA PINB0
 #define I2C_PIN_SCL PINB2
 
