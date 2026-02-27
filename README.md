@@ -19,16 +19,17 @@ Toisin sanottuna minimaalitoteutuksena C-koodissa
 ```C
 /* i2c.h */
 #include <stdint.h>
+#include <avr/io.h>
 
 #define I2C_PIN_SDA PINB0
 #define I2C_PIN_SCL PINB2
 
 /* Lähetä databufferi laitteelle
 
-1. Bufferin osoite
-2. Bufferin koko tavuina
-3. Laiteosoite
-4. Kirjoitusosoite laiteella
+1. uint8_t* Bufferin osoite
+2. uint8_t  Bufferin koko tavuina
+3. uint8_t  Laiteosoite
+4. uint8_t  Kirjoitusosoite laiteella
 */
 void i2c_laheta_buffer(uint8_t*, uint8_t, uint8_t, uint8_t);
 ```
@@ -101,18 +102,18 @@ src/i2c.h:20: Virhe: tuntematon käskykoodi ”void”
 ```
 ja kasa muita virheitä siitä että C:n perussanastoa ei tunneta. En tiedä mikä homma, kääntäjä menee johonkin omaan assembly-tilaan ja sekoaa C-koodista, selvittelen ehkä myöhemmin.
 
-Tässä funktiossa kutsuargumenttien rekisterilasku menee GCC wikin reseptin mukaan
+Assemblyfunktion kutsuargumenttien rekisteripaikkojen lasku menee GCC wikin reseptillä
 ```
-1. uint8_t*
-R = R26
+1. argumentti uint8_t*
+Aloitetaan R = R26
 uint8_t* on 2 tavua (muistiosoitteet 16 bit)
 2 tavua parillinen, ei tehdä mitään
-Vähennetään R - 2 (argumentin koko) = R26 - 2 = R24
-R24 > R8 joten argumentti passataan rekistereissä, R25:R24
+Vähennetään R26 - 2 (argumentin koko) = R24
+R24 > R8 joten argumentti passataan rekistereissä, alkaen R24 eli R25:R24
 
-2. uint8_t
-R = R24
-uint8_t on 1 tavu, pyöristetään ylös parilliseen niin viedään 2 tavua
+2. argumentti uint8_t
+R = R24 edellisestä
+uint8_t on 1 tavu, pyöristetään ylös parilliseen ja viedään 2 tavua
 R24 - 2 (pyöristetty koko) = R22
 R22 > R8 joten passataan rekistereissä, R23:R22
 
