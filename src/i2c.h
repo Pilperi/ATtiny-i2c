@@ -17,9 +17,8 @@
 1. Bufferin osoite
 2. Bufferin koko tavuina
 3. Laiteosoite
-4. Kirjoitusosoite laiteella
 */
-void i2c_laheta_buffer(uint8_t*, uint8_t, uint8_t, uint8_t);
+void i2c_laheta_buffer(uint8_t*, uint8_t, uint8_t);
 
 #endif // __ASSEMBLER__
 #endif //I2C_H

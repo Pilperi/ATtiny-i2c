@@ -69,7 +69,7 @@ S_OBJECTS := $(addprefix $(KOHDEKANSIO)/,$(S_FILENAMES:%.S=%.S.o))
 
 # Mitkä tulokset otetaan C-koodista ja mitkä assemblystä
 O_OBJECTS_FROM_C = $(KOHDEKANSIO)/main.o
-O_OBJECTS_FROM_S = $(KOHDEKANSIO)/isr.o $(KOHDEKANSIO)/i2c.o $(KOHDEKANSIO)/init.o
+O_OBJECTS_FROM_S = $(KOHDEKANSIO)/isr.o $(KOHDEKANSIO)/init.o $(KOHDEKANSIO)/i2c.o
 
 #########################################################################
 .PHONY: newbin

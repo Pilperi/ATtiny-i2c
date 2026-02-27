@@ -12,15 +12,12 @@ static void i2c_lopeta(void);
 static void i2c_delay(void);
 
 // Lähetä databufferi laitteelle
-void i2c_laheta_buffer(uint8_t* bufferi, uint8_t bufferin_koko, uint8_t laiteosoite, uint8_t muistiosoite)
+void i2c_laheta_buffer(uint8_t* bufferi, uint8_t bufferin_koko, uint8_t laiteosoite)
 {
     i2c_setup();
     i2c_aloita();
     laiteosoite &= ~(1<<0);
     USIDR = laiteosoite;
-    i2c_laheta();
-    i2c_lue_ack();
-    USIDR = muistiosoite;
     i2c_laheta();
     i2c_lue_ack();
     for (uint8_t tavunro=0; tavunro < bufferin_koko; tavunro++)
