@@ -18,11 +18,15 @@ Lähinnä täytyy
 Toisin sanottuna minimaalitoteutuksena C-koodissa
 ```C
 /* i2c.h */
-#include <stdint.h>
+/* Käytetään sekä assemblyssä että C-koodissa: */
 #include <avr/io.h>
 
 #define I2C_PIN_SDA PINB0
 #define I2C_PIN_SCL PINB2
+
+/* Käytetään vain C-kielessä: */
+#ifndef __ASSEMBLER__
+#include <stdint.h>
 
 /* Lähetä databufferi laitteelle
 
@@ -32,6 +36,8 @@ Toisin sanottuna minimaalitoteutuksena C-koodissa
 4. uint8_t  Kirjoitusosoite laiteella
 */
 void i2c_laheta_buffer(uint8_t*, uint8_t, uint8_t, uint8_t);
+
+#endif // __ASSEMBLER__
 ```
 ```C
 /* main.c */
@@ -53,9 +59,7 @@ ja assembly-koodissa
 
 #define __SFR_OFFSET 0
 #include <avr/io.h>
-
-#define I2C_PIN_SDA PINB0
-#define I2C_PIN_SCL PINB2
+#include "i2c.h"
 
 .global i2c_laheta_buffer
 
@@ -96,24 +100,24 @@ i2c_laheta_buffer_valmis:
     RET
 ```
 
-Jekkuna tässä on se, että assembly-toteutuksessa voi kyllä tehdä `#include <avr/io.h>`, mutta jos yrittää `#include "i2c.h"` saadakseen sieltä `I2C_PIN_SDA`-määritelmät sun muut, tulee
+Jekkuna tässä on se, että assembly-toteutuksessa voi kyllä tehdä `#include <avr/io.h>`, mutta jos yrittää `#include "i2c.h"` ilman suojuksia saadakseen sieltä `I2C_PIN_SDA`-määritelmät sun muut, tulee
 ```
 src/i2c.h:20: Virhe: tuntematon käskykoodi ”void”
 ```
-ja kasa muita virheitä siitä että C:n perussanastoa ei tunneta. En tiedä mikä homma, kääntäjä menee johonkin omaan assembly-tilaan ja sekoaa C-koodista, selvittelen ehkä myöhemmin.
+ja kasa muita virheitä siitä että C:n perussanastoa ei tunneta. Siksi pitää olla `#ifndef __ASSEMBLER__`-suojus C-osuuksien kääreenä.
 
-Assemblyfunktion kutsuargumenttien rekisteripaikkojen lasku menee GCC wikin reseptillä
+Assemblyfunktiossa kutsuargumenttien rekisterilasku menee GCC wikin reseptin mukaisesti:
 ```
-1. argumentti uint8_t*
-Aloitetaan R = R26
+1. uint8_t* osoiteargumentti
+aloitetaan R26
 uint8_t* on 2 tavua (muistiosoitteet 16 bit)
 2 tavua parillinen, ei tehdä mitään
 Vähennetään R26 - 2 (argumentin koko) = R24
-R24 > R8 joten argumentti passataan rekistereissä, alkaen R24 eli R25:R24
+R24 > R8 joten argumentti passataan rekistereissä, R25:R24
 
-2. argumentti uint8_t
-R = R24 edellisestä
-uint8_t on 1 tavu, pyöristetään ylös parilliseen ja viedään 2 tavua
+2. uint8_t kokoargumentti
+jatketaan edellisestä R24
+uint8_t on 1 tavu, pyöristetään ylös parilliseen niin viedään 2 tavua
 R24 - 2 (pyöristetty koko) = R22
 R22 > R8 joten passataan rekistereissä, R23:R22
 

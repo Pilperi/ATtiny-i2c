@@ -1,19 +1,8 @@
 #define __SFR_OFFSET 0
 #include <avr/io.h>
-
-#define I2C_PIN_SDA PINB0
-#define I2C_PIN_SCL PINB2
+#include "i2c.h"
 
 .global i2c_laheta_buffer
-.global i2c_laheta
-.global i2c_lue
-
-.global i2c_setup
-.global i2c_kello_kayntiin
-.global i2c_aloita
-.global i2c_lopeta
-.global i2c_lue_ack
-.global i2c_siirra
 
 .section .text
 
@@ -154,7 +143,6 @@ i2c_lue:
     IN R18,USISR        ; Putsaa flagit, laskuri ykköseen
     ANDI R18,0xF0
     OUT USISR,R18
-    IN R18,USIDR
     RCALL i2c_siirra_kahdeksan
     RET
 

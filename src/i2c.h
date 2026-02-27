@@ -1,14 +1,16 @@
-/**/
+/* I2C-funktioiden headerit */
 #ifndef I2C_H
 #define I2C_H
 
-#include <stdint.h>
+/* Käytetään sekä assemblyssä että C-koodissa: */
 #include <avr/io.h>
 
-#define I2C_ERROR_NO_ACK 1<<0
 #define I2C_PIN_SDA PINB0
 #define I2C_PIN_SCL PINB2
-#define I2C_CLOCK_STANDARD 5
+
+/* Käytetään vain C-kielessä */
+#ifndef __ASSEMBLER__
+#include <stdint.h>
 
 /* Lähetä databufferi laitteelle
 
@@ -18,15 +20,6 @@
 4. Kirjoitusosoite laiteella
 */
 void i2c_laheta_buffer(uint8_t*, uint8_t, uint8_t, uint8_t);
-void i2c_laheta(void);
-void i2c_lue(void);
 
-static void i2c_setup(void);
-static void i2c_kello_kayntiin(void);
-static void i2c_aloita(void);
-static void i2c_lopeta(void);
-static void i2c_lue_ack(void);
-static void i2c_siirra(void);
-static void i2c_delay(void);
-
+#endif // __ASSEMBLER__
 #endif //I2C_H
