@@ -8,7 +8,7 @@
 #define PCF8582_READ         1<<0
 #define PCF8582_WRITE        0<<0
 
-void pcf8582_write_buffer(uint8_t device_address, uint8_t* data_buffer, uint8_t buffer_size, uint8_t* error);
-void pcf8582_read_buffer(uint8_t device_address, uint8_t* data_buffer, uint8_t buffer_size, uint8_t* error);
+void pcf8582_kirjoita_bufferi(uint8_t, uint8_t, uint8_t*, uint8_t);
+void pcf8582_lue_bufferi(uint8_t, uint8_t, uint8_t*, uint8_t);
 
 #endif
