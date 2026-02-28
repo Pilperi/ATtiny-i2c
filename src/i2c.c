@@ -68,36 +68,33 @@ PORTB SDA + SCL
 
 Kutsun jälkeen
 DDRB  SDA + SCL
+
+lue : 0 jos kirjoitetaan ACK
+      >0 jos luetaan ACK
 */ 
-void i2c_lue_ack(void)
+void i2c_ack(uint8_t lue)
 {
     USISR = 0xFE;
     USIDR = 0x00;
-    DDRB &= I2C_MASK_SDA_N;
+    if (lue)
+    {
+        DDRB &= I2C_MASK_SDA_N;
+    }
+    else
+    {
+        DDRB |= I2C_MASK_SDA;
+    }
     USICR |= (1<<USITC);
     i2c_delay();
     USICR |= (1<<USITC);
-    DDRB |= I2C_MASK_SDA;
-    USISR = 0xF0;
-}
-
-/* Kirjoita ACK laitteelle
-Ennen kutsua:
-DDRB  SCL
-PORTB SDA + SCL
-
-Kutsun jälkeen
-DDRB  !SDA
-*/
-void i2c_kirjoita_ack(void)
-{
-    USISR = 0xFE;
-    USIDR = 0x00;
-    DDRB |= I2C_MASK_SDA;
-    USICR |= (1<<USITC);
-    i2c_delay();
-    USICR |= (1<<USITC);
-    DDRB &= I2C_MASK_SDA_N;
+    if (lue)
+    {
+        DDRB |= I2C_MASK_SDA;
+    }
+    else
+    {
+        DDRB &= I2C_MASK_SDA_N;
+    }
     USISR = 0xF0;
 }
 

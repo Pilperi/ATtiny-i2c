@@ -31,7 +31,7 @@ void i2c_setup(void);
 void i2c_aloita(void);
 void i2c_lopeta(void);
 void i2c_siirra_kahdeksan(void);
-void i2c_lue_ack(void);
+void i2c_ack(uint8_t lue);
 void i2c_kirjoita_ack(void);
 
 #endif // __ASSEMBLER__
