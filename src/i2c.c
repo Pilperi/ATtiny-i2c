@@ -5,46 +5,12 @@
 
 /* prototyypit */
 static void i2c_delay(void);
-static void i2c_siirra_kahdeksan(void);
 
-// Lähetä databufferi laitteelle
-void i2c_laheta_buffer(uint8_t* bufferi, uint8_t bufferin_koko, uint8_t laiteosoite)
-{
-    i2c_setup();
-    i2c_aloita();
-    laiteosoite &= ~(1<<0);
-    USIDR = laiteosoite;
-    i2c_laheta();
-    i2c_lue_ack();
-    for (uint8_t tavunro=0; tavunro < bufferin_koko; tavunro++)
-    {
-        USIDR = bufferi[tavunro];
-        i2c_laheta();
-        i2c_lue_ack();
-    }
-    i2c_lopeta();
-}
-
-// Lue dataa laitteelta bufferiin
-void i2c_lue_buffer(uint8_t* bufferi, uint8_t bufferin_koko, uint8_t laiteosoite)
-{
-    i2c_setup();
-    i2c_aloita();
-    laiteosoite |= (1<<0);
-    USIDR = laiteosoite;
-    i2c_laheta();
-    i2c_lue_ack();
-    for (uint8_t tavunro=0; tavunro < bufferin_koko; tavunro++)
-    {
-        i2c_lue();
-        bufferi[tavunro] = USIDR;
-        i2c_kirjoita_ack();
-    }
-    i2c_lopeta();
-}
-
-
-// Alusta I2C-kommunikaatioväylä
+/* Alusta I2C-kommunikaatioväylä
+Kutsun jälkeen:
+DDRB  SDA + SCL
+PORTB SDA + SCL
+*/
 void i2c_setup(void)
 {
     // Oletuksena ylhäällä, DDRB ajaa alas tarvittaessa
@@ -58,8 +24,9 @@ void i2c_setup(void)
 }
 
 /* Aloita I2C-kommunikaatio
-DDRB oltava päällä SDA ja SCL ennen kutsua
-PORTB oltava molemmat ylhäällä
+Ennen kutsua:
+DDRB  SDA + SCL
+PORTB SDA + SCL
 */
 void i2c_aloita(void)
 {
@@ -76,13 +43,16 @@ void i2c_aloita(void)
 
 /* Lopeta I2C-kommunikaatio (vapauta väylä)
 Ennen kutsua:
-DDRB  päällä SDA ja SCL
-PORTB molemmat alhaalla
+DDRB  SDA + SCL
+PORTB !SDA + !SCL
+
+Kutsun jälkeen
+DDRB  !SDA + !SCL
+PORTB !SDA + !SCL
 */
 void i2c_lopeta(void)
 {
     // SDA alhaalta ylös kun SCL on ylhäällä
-    // Molemmat nollaan jos jossain muualla
     // SCL ylös
     DDRB &= I2C_MASK_SCL_N;
     i2c_delay();
@@ -92,7 +62,12 @@ void i2c_lopeta(void)
 }
 
 /* Lue ACK laitteelta
-DDRB  päällä sekä SDA että SCL kutsun jälkeen.
+Ennen kutsua:
+DDRB  SDA + SCL
+PORTB SDA + SCL
+
+Kutsun jälkeen
+DDRB  SDA + SCL
 */ 
 void i2c_lue_ack(void)
 {
@@ -106,7 +81,14 @@ void i2c_lue_ack(void)
     USISR = 0xF0;
 }
 
-// Kirjoita ACK laitteelle
+/* Kirjoita ACK laitteelle
+Ennen kutsua:
+DDRB  SCL
+PORTB SDA + SCL
+
+Kutsun jälkeen
+DDRB  !SDA
+*/
 void i2c_kirjoita_ack(void)
 {
     USISR = 0xFE;
@@ -119,23 +101,17 @@ void i2c_kirjoita_ack(void)
     USISR = 0xF0;
 }
 
-// Lähetä tavun verran tavaraa
-void i2c_laheta(void)
+/* Siirrä yksittäinen tavu, suuntaan tai toiseen
+Ennen kutsua:
+DDRB  SCL, SDA riippuu suunnasta
+PORTB SDA + SCL
+
+Kutsun jälkeen
+DDRB  !SDA
+*/
+void i2c_siirra_kahdeksan(void)
 {
     USISR &= 0xF0;
-    i2c_siirra_kahdeksan();
-}
-
-// Lähetä tavun verran tavaraa
-void i2c_lue(void)
-{
-    USISR &= 0xF0;
-    i2c_siirra_kahdeksan();
-}
-
-// Siirrä yksittäinen tavu, suuntaan tai toiseen
-static void i2c_siirra_kahdeksan(void)
-{
     while(!(USISR & (1<<USIOIF)))
     {
         USICR |= (1<<USITC);
@@ -143,7 +119,7 @@ static void i2c_siirra_kahdeksan(void)
         USICR |= (1<<USITC);
         i2c_delay();
     }
-    DDRB &= ~(1<<I2C_PIN_SDA);
+    DDRB &= I2C_MASK_SDA_N; // Vapauta SDA ACK varten
     USISR = 0x00;
 }
 

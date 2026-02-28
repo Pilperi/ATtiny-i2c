@@ -30,8 +30,7 @@ void i2c_lue_buffer(uint8_t*, uint8_t, uint8_t);
 void i2c_setup(void);
 void i2c_aloita(void);
 void i2c_lopeta(void);
-void i2c_laheta(void);
-void i2c_lue(void);
+void i2c_siirra_kahdeksan(void);
 void i2c_lue_ack(void);
 void i2c_kirjoita_ack(void);
 
