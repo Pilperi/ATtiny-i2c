@@ -22,9 +22,9 @@ init_data_siirto_loop_check:          ; Jatka kunnes Y==X
     CP YL,XL
     CPC YH,XH
     BRNE init_data_siirto_loop
+    ; BSS heti data jälkeen, jatketaan samalla pointterilla
+    ; kirjoittamista BSS loppuun asti
 init_data_sec_bss:                    ; Alustamaton (nollalla alustettu) data
-    LDI YL,lo8(sram_bss_start)        ; Kirjoitusosoite
-    LDI YH,hi8(sram_bss_start)
     LDI XL,lo8(sram_bss_end)          ; Kirjoituksen lopetusosoite
     LDI XH,hi8(sram_bss_end)
     RJMP init_bss_fill_loop_check

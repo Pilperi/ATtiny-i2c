@@ -11,7 +11,7 @@ Kutsun jälkeen:
 DDRB  SDA + SCL
 PORTB SDA + SCL
 */
-void i2c_setup(void)
+void i2c_setup(uint8_t twi_moodi)
 {
     // Oletuksena ylhäällä, DDRB ajaa alas tarvittaessa
     PORTB |= I2C_MASK_SDA_SCL;
@@ -19,7 +19,7 @@ void i2c_setup(void)
     // Neutraali nolladata pohjalle
     USIDR = 0x00;
     // TWI, softakellotus
-    USICR = (1<<USIWM1)|(1<<USICS1)|(1<<USICLK);
+    USICR = twi_moodi;
     USISR = 0xF0;
 }
 
@@ -76,6 +76,7 @@ void i2c_ack(uint8_t lue)
 {
     USISR = 0xFE;
     USIDR = 0x00;
+    uint8_t ddrb_lahtotila = DDRB;
     if (lue)
     {
         DDRB &= I2C_MASK_SDA_N;
@@ -87,14 +88,7 @@ void i2c_ack(uint8_t lue)
     USICR |= (1<<USITC);
     i2c_delay();
     USICR |= (1<<USITC);
-    if (lue)
-    {
-        DDRB |= I2C_MASK_SDA;
-    }
-    else
-    {
-        DDRB &= I2C_MASK_SDA_N;
-    }
+    DDRB = ddrb_lahtotila;
     USISR = 0xF0;
 }
 
@@ -102,9 +96,6 @@ void i2c_ack(uint8_t lue)
 Ennen kutsua:
 DDRB  SCL, SDA riippuu suunnasta
 PORTB SDA + SCL
-
-Kutsun jälkeen
-DDRB  !SDA
 */
 void i2c_siirra_kahdeksan(void)
 {
@@ -116,7 +107,6 @@ void i2c_siirra_kahdeksan(void)
         USICR |= (1<<USITC);
         i2c_delay();
     }
-    DDRB &= I2C_MASK_SDA_N; // Vapauta SDA ACK varten
     USISR = 0x00;
 }
 

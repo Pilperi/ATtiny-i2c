@@ -7,7 +7,7 @@
 void pcf8582_kirjoita_bufferi(uint8_t laiteosoite, uint8_t aloitusosoite,
                               uint8_t* bufferi_data, uint8_t bufferin_koko)
 {
-    i2c_setup();
+    i2c_setup(I2C_MOODI_SOFTAKELLO);
     i2c_aloita();
     USIDR = laiteosoite & ~(1<<0); // Kirjoitusmoodi
     i2c_siirra_kahdeksan();
@@ -28,7 +28,7 @@ void pcf8582_kirjoita_bufferi(uint8_t laiteosoite, uint8_t aloitusosoite,
 void pcf8582_lue_bufferi(uint8_t laiteosoite, uint8_t aloitusosoite,
                          uint8_t* bufferi_data, uint8_t bufferin_koko)
 {
-    i2c_setup();
+    i2c_setup(I2C_MOODI_SOFTAKELLO);
     i2c_aloita();
     USIDR = laiteosoite & ~(1<<0); // Kirjoitusmoodi
     i2c_siirra_kahdeksan();
@@ -37,9 +37,9 @@ void pcf8582_lue_bufferi(uint8_t laiteosoite, uint8_t aloitusosoite,
     i2c_siirra_kahdeksan();
     i2c_ack(1);
     USIDR = 0xFF;
-    PORTB |= I2C_MASK_SDA;
-    PORTB |= I2C_MASK_SCL;
-    USISR = 0xF0;
+    PORTB |= I2C_MASK_SDA_SCL;
+    //PORTB |= I2C_MASK_SCL;
+    //USISR = 0xF0;
     i2c_aloita(); // Kaksoisaloitus
     USIDR = laiteosoite | (1<<0); // Lukumoodi
     i2c_siirra_kahdeksan();
