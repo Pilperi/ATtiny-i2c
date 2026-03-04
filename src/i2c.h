@@ -18,6 +18,9 @@
 #define I2C_MOODI_TIMER0     ((1<<USIWM1)|(1<<USICS0))
 #define I2C_USISR_CLR        0xF0
 
+#define I2C_ACK_KIRJOITA     0
+#define I2C_ACK_LUE          1
+
 /* Käytetään vain C-kielessä */
 #ifndef __ASSEMBLER__
 #include <stdint.h>
@@ -25,6 +28,7 @@
 /* Alkeisfunktiot */
 void i2c_setup(uint8_t);
 void i2c_aloita(void);
+void i2c_aloita_rep(void);
 void i2c_lopeta(void);
 void i2c_siirra_kahdeksan(void);
 void i2c_ack(uint8_t lue);

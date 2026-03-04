@@ -41,6 +41,17 @@ void i2c_aloita(void)
     USISR = 0xF0;
 }
 
+/* Toistettu aloitus (ts. ilman lopetusta välissä)
+*/
+void i2c_aloita_rep(void)
+{
+    USIDR |= 1<<7;
+    PORTB |= I2C_MASK_SDA;
+    PORTB |= I2C_MASK_SCL;
+    i2c_delay();
+    i2c_aloita();
+}
+
 /* Lopeta I2C-kommunikaatio (vapauta väylä)
 Ennen kutsua:
 DDRB  SDA + SCL
