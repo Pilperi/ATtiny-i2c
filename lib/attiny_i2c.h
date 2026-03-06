@@ -30,9 +30,9 @@ void i2c_setup(uint8_t);
 void i2c_aloita(void);
 void i2c_aloita_rep(void);
 void i2c_lopeta(void);
-void i2c_lue_kahdeksan(void);
-void i2c_kirjoita_kahdeksan(void);
-void i2c_ack(uint8_t lue);
+uint8_t i2c_lue(void);
+void i2c_kirjoita(uint8_t);
+uint8_t i2c_ack(uint8_t lue);
 
 #endif // __ASSEMBLER__
 #endif //I2C_H
