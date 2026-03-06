@@ -9,10 +9,10 @@
 #define I2C_PIN_SCL          PINB2
 #define I2C_MASK_SDA         (1<<I2C_PIN_SDA)
 #define I2C_MASK_SCL         (1<<I2C_PIN_SCL)
-#define I2C_MASK_SDA_N       (0xFF^I2C_MASK_SDA)
-#define I2C_MASK_SCL_N       (0xFF^I2C_MASK_SCL)
+#define I2C_MASK_SDA_N      ~(I2C_MASK_SDA)
+#define I2C_MASK_SCL_N      ~(I2C_MASK_SCL)
 #define I2C_MASK_SDA_SCL     (I2C_MASK_SDA | I2C_MASK_SCL)
-#define I2C_MASK_SDA_SCL_N   (0xFF^(I2C_MASK_SDA | I2C_MASK_SCL_N))
+#define I2C_MASK_SDA_SCL_N  ~((I2C_MASK_SDA | I2C_MASK_SCL_N))
 
 #define I2C_MOODI_SOFTAKELLO ((1<<USIWM1)|(1<<USICS1)|(1<<USICLK))
 #define I2C_MOODI_TIMER0     ((1<<USIWM1)|(1<<USICS0))

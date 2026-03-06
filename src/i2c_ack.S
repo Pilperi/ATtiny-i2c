@@ -30,9 +30,9 @@ i2c_ack:
     RJMP i2c_ack_kellota
 i2c_ack_lue:
     ANDI R18,I2C_MASK_SDA_N ; Lue ACK
+    OUT USIDR,R1
 i2c_ack_kellota:
     OUT DDRB,R18
-    OUT USIDR,R1
     LDI R18,0xFE
     OUT USISR,R18
     SBI USICR,USITC
