@@ -40,7 +40,7 @@ i2c_siirra_odota_scl:         ; Vastaanottaja saattaa pitää SCL alhaalla
     SBI USICR,USITC
     SBIS USISR,USIOIF
     RJMP i2c_siirra_loop
-    IN R24,USIBR
     LDI R18,I2C_USISR_CLR
     OUT USISR,R18             ; Nollaa laskuri ja flagit
+    IN R24,USIBR
     RET

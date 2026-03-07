@@ -23,8 +23,6 @@ i2c_aloita_rep:
     SBI PORTB,I2C_PIN_SCL
     RCALL i2c_delay
 i2c_aloita:
-    LDI R18,I2C_MASK_SDA_SCL
-    OUT DDRB,R18
     CBI PORTB,I2C_PIN_SDA
     RCALL i2c_delay
     CBI PORTB,I2C_PIN_SCL
