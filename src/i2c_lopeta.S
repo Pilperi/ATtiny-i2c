@@ -14,19 +14,19 @@
 .section .text
 
 ; Lähetä I2C lopetussignaali viemällä data ylös kellon ollessa ylhäällä
-; Kutsun jälkeen DDRB on asetettu SDA:lle ja SCL:lle.
+; Kutsun jälkeen DDR on asetettu SDA:lle ja SCL:lle.
 ;
 ; Rekisterikäyttö:
 ; R18
 i2c_lopeta:
     SBI USIDR,7
-    IN R18,DDRB
+    IN R18,I2C_DDR
     ORI R18,I2C_MASK_SDA_SCL
-    OUT DDRB,R18
-    CBI PORTB,I2C_PIN_SDA
-    SBI PORTB,I2C_PIN_SCL
+    OUT I2C_DDR,R18
+    CBI I2C_PORTREG,I2C_PIN_SDA
+    SBI I2C_PORTREG,I2C_PIN_SCL
     RCALL i2c_delay
-    SBI PORTB,I2C_PIN_SDA
+    SBI I2C_PORTREG,I2C_PIN_SDA
     LDI R18,I2C_USISR_CLR
     OUT USISR,R18          ; Kuittaa lopetus
     RET
