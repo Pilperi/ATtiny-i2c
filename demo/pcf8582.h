@@ -10,6 +10,5 @@
 
 void pcf8582_kirjoita_bufferi(uint8_t, uint8_t, uint8_t*, uint8_t);
 void pcf8582_lue_bufferi(uint8_t, uint8_t, uint8_t*, uint8_t);
-uint8_t pcf8582_ping(uint8_t laiteosoite);
 
 #endif // PCF8582_H

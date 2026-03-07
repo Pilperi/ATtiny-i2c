@@ -46,7 +46,7 @@ S_OBJECTS := $(addprefix $(KOHDEKANSIO)/,$(S_FILENAMES:%.S=%.S.o))
 
 # Mitkä tulokset otetaan C-koodista ja mitkä assemblystä
 O_OBJECTS_FROM_C =
-O_OBJECTS_FROM_S = $(KOHDEKANSIO)/i2c_setup.o $(KOHDEKANSIO)/i2c_aloita.o $(KOHDEKANSIO)/i2c_lopeta.o $(KOHDEKANSIO)/i2c_ack.o $(KOHDEKANSIO)/i2c_siirra_kahdeksan.o $(KOHDEKANSIO)/i2c_delay.o
+O_OBJECTS_FROM_S = $(KOHDEKANSIO)/i2c_setup.o $(KOHDEKANSIO)/i2c_aloita.o $(KOHDEKANSIO)/i2c_lopeta.o $(KOHDEKANSIO)/i2c_ack.o $(KOHDEKANSIO)/i2c_siirra_kahdeksan.o $(KOHDEKANSIO)/i2c_delay.o $(KOHDEKANSIO)/i2c_ping.o
 LIB_HEADER = $(KOHDEKANSIO)/attiny_i2c.h
 
 #########################################################################

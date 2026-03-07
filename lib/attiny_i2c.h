@@ -25,14 +25,30 @@
 #ifndef __ASSEMBLER__
 #include <stdint.h>
 
-/* Alkeisfunktiot */
-void i2c_setup(uint8_t);
+
+/* Alusta I2C-väylä */
+void i2c_setup(uint8_t toimintamoodi);
+
+/* Lähetä I2C-aloitussignaali: SDA alas SCL ollessa ylhäällä */
 void i2c_aloita(void);
+
+/* Lähetä toistettu aloitus */
 void i2c_aloita_rep(void);
+
+/* Lähetä I2C-lopetussignaali: SDA ylös SCL ollessa ylhäällä */
 void i2c_lopeta(void);
+
+/* Lue tavu (palauttaa luetun datan) */
 uint8_t i2c_lue(void);
-uint8_t i2c_kirjoita(uint8_t);
+
+/* Kirjoita tavu (palauttaa kirjoitetun datan)*/
+uint8_t i2c_kirjoita(uint8_t data);
+
+/* Toimita ACK: jos lue 0, kirjoita ACK. Muutoin lue ACK ja palauta. */
 uint8_t i2c_ack(uint8_t lue);
+
+/* Pingaa laiteosoitetta. Palauttaa laitteen ACK (0 jos paikalla) */
+uint8_t i2c_ping(uint8_t laiteosoite);
 
 #endif // __ASSEMBLER__
 #endif //I2C_H

@@ -3,10 +3,12 @@
 #endif
 #include <stdint.h>
 #include <util/delay.h>
+#include <attiny_i2c.h>
 #include "pcf8582.h"
 
 void main(void)
 {
+    /* Testidata joka kirjoitetaan laitteelle */
     uint8_t data_buff_kirjoita[] = {
         0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88,
         0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF, 0x00,
@@ -17,11 +19,12 @@ void main(void)
     uint8_t data_buff_lue[20];
     // Katsotaan että laite vastaa kun pingataan
     uint8_t ping_vastaus;
-    ping_vastaus = pcf8582_ping(laite_osoite);
-    pcf8582_ping(ping_vastaus);
+    i2c_setup(I2C_MOODI_SOFTAKELLO);
+    ping_vastaus = i2c_ping(laite_osoite);
+    i2c_ping(ping_vastaus);
     // Katsotaan että laite ei vastaa muihin pingeihin
-    ping_vastaus = pcf8582_ping(laite_osoite + 0x0E);
-    pcf8582_ping(ping_vastaus);
+    ping_vastaus = i2c_ping(laite_osoite + 0x0E);
+    i2c_ping(ping_vastaus);
     // Kirjoita databufferi laitteelle
     pcf8582_kirjoita_bufferi(laite_osoite, laite_muistiosoite, data_buff_kirjoita, 20);
     // Lue laitteen muistista, pitäisi olla samat mitä just kirjoitettiin

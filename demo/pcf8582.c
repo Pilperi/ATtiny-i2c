@@ -34,9 +34,13 @@ void pcf8582_kirjoita_bufferi(uint8_t laiteosoite, uint8_t aloitusosoite,
             tavunro++;
         }
         i2c_lopeta();
-        ack_vastaus = pcf8582_ping(laiteosoite);
+        ack_vastaus = i2c_ping(laiteosoite);
         while(ack_vastaus){
-            ack_vastaus = pcf8582_ping(laiteosoite);
+            /* Laiska delay ~5 ms */
+            for(uint16_t cnt=1000; cnt > 0; cnt--){
+                __asm__("nop");
+            }
+            ack_vastaus = i2c_ping(laiteosoite);
         }
     }
 }
@@ -62,17 +66,4 @@ void pcf8582_lue_bufferi(uint8_t laiteosoite, uint8_t aloitusosoite,
         ack_vastaus = i2c_ack(I2C_ACK_KIRJOITA);
     }
     i2c_lopeta();
-}
-
-
-/* Pingaa laitetta ja katso vastaako se. */
-uint8_t pcf8582_ping(uint8_t laiteosoite)
-{
-    uint8_t ack_vastaus;
-    i2c_setup(I2C_MOODI_SOFTAKELLO);
-    i2c_aloita();
-    i2c_kirjoita(laiteosoite);
-    ack_vastaus = i2c_ack(I2C_ACK_LUE);
-    i2c_lopeta();
-    return(ack_vastaus);
 }
