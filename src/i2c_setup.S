@@ -27,4 +27,6 @@ i2c_setup:
     ORI R18,I2C_MASK_SDA_SCL
     OUT DDRB,R18
     OUT USICR,R24
+    LDI R18,0xFF
+    OUT USIBR,R18
     RET

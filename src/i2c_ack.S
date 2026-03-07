@@ -22,18 +22,19 @@
 ; Rekisterikäyttö:
 ; R18
 i2c_ack:
+    OUT USIDR,R1
     IN R18,DDRB
     PUSH R18
     CPSE R24,R1
-    BREQ i2c_ack_lue
-    ORI R18,I2C_MASK_SDA    ; Kirjoita ACK
+    RJMP i2c_ack_lue        ; R24 != 0, luetaan
+    ORI R18,I2C_MASK_SDA    ; R24 == 0, kirjoitetaan
     RJMP i2c_ack_kellota
 i2c_ack_lue:
     ANDI R18,I2C_MASK_SDA_N ; Lue ACK
-    OUT USIDR,R1
+    SBI USIDR,7             ; MSB 1, vastaus kirjoittaa sen alas
 i2c_ack_kellota:
     OUT DDRB,R18
-    LDI R18,0xFE
+    LDI R18,0xFF
     OUT USISR,R18
     SBI USICR,USITC
 i2c_ack_odota_scl:
@@ -44,4 +45,6 @@ i2c_ack_odota_scl:
     IN R24,USIBR
     POP R18                 ; Palauta DDRB lähtötilaan
     OUT DDRB,R18
+    LDI R18,I2C_USISR_CLR   ; Nollaa overflow
+    OUT USISR,R18
     RET

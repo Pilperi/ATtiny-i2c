@@ -14,7 +14,7 @@
 #define I2C_MASK_SDA_SCL     (I2C_MASK_SDA | I2C_MASK_SCL)
 #define I2C_MASK_SDA_SCL_N  ~((I2C_MASK_SDA | I2C_MASK_SCL_N))
 
-#define I2C_MOODI_SOFTAKELLO ((1<<USIWM1)|(1<<USICS1)|(1<<USICLK))
+#define I2C_MOODI_SOFTAKELLO ((1<<USIWM1)|(1<<USICS1)|(0<<USICS0)|(1<<USICLK))
 #define I2C_MOODI_TIMER0     ((1<<USIWM1)|(1<<USICS0))
 #define I2C_USISR_CLR        0xF0
 
@@ -31,7 +31,7 @@ void i2c_aloita(void);
 void i2c_aloita_rep(void);
 void i2c_lopeta(void);
 uint8_t i2c_lue(void);
-void i2c_kirjoita(uint8_t);
+uint8_t i2c_kirjoita(uint8_t);
 uint8_t i2c_ack(uint8_t lue);
 
 #endif // __ASSEMBLER__
