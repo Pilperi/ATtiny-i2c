@@ -153,7 +153,7 @@ $(KOHDEBIN): $(KOHDE_ELF)
 
 # Linkkaa .o-tiedostot linkkeriskriptillä elffiksi.
 # O_OBJECTS_FROM_C ja O_OBJECTS_FROM_S sovelluskohtaisia.
-$(KOHDE_ELF): $(O_OBJECTS_FROM_C) $(O_OBJECTS_FROM_S)
+$(KOHDE_ELF): $(O_OBJECTS_FROM_C) $(O_OBJECTS_FROM_S) $(LIBS)
 	@echo Link ELF
 	@echo O_OBJECTS_FROM_C $(O_OBJECTS_FROM_C)
 	@echo O_OBJECTS_FROM_S $(O_OBJECTS_FROM_S)

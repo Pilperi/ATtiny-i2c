@@ -47,6 +47,7 @@ S_OBJECTS := $(addprefix $(KOHDEKANSIO)/,$(S_FILENAMES:%.S=%.S.o))
 # Mitkä tulokset otetaan C-koodista ja mitkä assemblystä
 O_OBJECTS_FROM_C =
 O_OBJECTS_FROM_S = $(KOHDEKANSIO)/i2c_setup.o $(KOHDEKANSIO)/i2c_aloita.o $(KOHDEKANSIO)/i2c_lopeta.o $(KOHDEKANSIO)/i2c_ack.o $(KOHDEKANSIO)/i2c_siirra_kahdeksan.o $(KOHDEKANSIO)/i2c_delay.o
+LIB_HEADER = $(KOHDEKANSIO)/attiny_i2c.h
 
 #########################################################################
 .PHONY: lib_out
@@ -71,7 +72,7 @@ endif
 
 # Paketoi .o-tiedostot libra-arkistoksi.
 $(KOHDE_LIB): $(O_OBJECTS_FROM_C) $(O_OBJECTS_FROM_S)
-	@echo Link ELF
+	@echo Archive
 	@echo O_OBJECTS_FROM_C $(O_OBJECTS_FROM_C)
 	@echo O_OBJECTS_FROM_S $(O_OBJECTS_FROM_S)
 	$(ARCHIVER) $(ARCHFLAGS) $(KOHDE_LIB) $(O_OBJECTS_FROM_C) $(O_OBJECTS_FROM_S)
@@ -86,8 +87,8 @@ $(O_OBJECTS_FROM_S): $(S_OBJECTS)
 	test "$@" != "" && cp $(patsubst %.o,%.S.o,$@) $@
 
 # Käännä kaikki .c-tiedostot .c.o-tiedostoiksi
-$(C_OBJECTS): $(C_SOURCES)
+$(C_OBJECTS): $(C_SOURCES) $(LIB_HEADER)
 	$(COMP_CC) $(COMPFLAGS_C) $(C_COMPILER_TARGET_FLAGS) -o $@ $(addprefix $(KOODIKANSIO)/,$(notdir $(patsubst %.c.o,%.c,$@)))
 # Käännä kaikki .S-tiedostot .S.o-tiedostoiksi
-$(S_OBJECTS): $(S_SOURCES)
+$(S_OBJECTS): $(S_SOURCES) $(LIB_HEADER)
 	$(COMP_AS) $(COMPFLAGS_AS) -o $@ $(addprefix $(KOODIKANSIO)/,$(notdir $(patsubst %.S.o,%.S,$@)))
