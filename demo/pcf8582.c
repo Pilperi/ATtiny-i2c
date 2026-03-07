@@ -3,23 +3,42 @@
 #include "pcf8582.h"
 #include <attiny_i2c.h>
 
+
 /* Kirjoita bufferin data laitteelle */
 void pcf8582_kirjoita_bufferi(uint8_t laiteosoite, uint8_t aloitusosoite,
                               uint8_t* bufferi_data, uint8_t bufferin_koko)
 {
     uint8_t ack_vastaus;
+    uint8_t tavunro = 0;
     i2c_setup(I2C_MOODI_SOFTAKELLO);
-    i2c_aloita();
-    i2c_kirjoita(laiteosoite & ~(1<<0));
-    ack_vastaus = i2c_ack(I2C_ACK_LUE);
-    i2c_kirjoita(aloitusosoite);
-    ack_vastaus = i2c_ack(I2C_ACK_LUE);
-    for (uint8_t tavunro=0; tavunro < bufferin_koko; tavunro++)
+    while (tavunro < bufferin_koko)
     {
-        i2c_kirjoita(bufferi_data[tavunro]);
+        if (tavunro)
+        {
+            i2c_aloita_rep();
+        }
+        else
+        {
+            i2c_aloita();
+        }
+        i2c_kirjoita(laiteosoite & PCF8582_MASK_WRITE);
         ack_vastaus = i2c_ack(I2C_ACK_LUE);
+        i2c_kirjoita(aloitusosoite + tavunro);
+        ack_vastaus = i2c_ack(I2C_ACK_LUE);
+        uint8_t sananumero = 0;
+        while ((sananumero < 8) & (tavunro < bufferin_koko))
+        {
+            i2c_kirjoita(bufferi_data[tavunro]);
+            ack_vastaus = i2c_ack(I2C_ACK_LUE);
+            sananumero++;
+            tavunro++;
+        }
+        i2c_lopeta();
+        ack_vastaus = pcf8582_ping(laiteosoite);
+        while(ack_vastaus){
+            ack_vastaus = pcf8582_ping(laiteosoite);
+        }
     }
-    i2c_lopeta();
 }
 
 /* Lue bufferin verran dataa laitteelta, aloittaen aloitusosoitteesta. */
@@ -43,4 +62,17 @@ void pcf8582_lue_bufferi(uint8_t laiteosoite, uint8_t aloitusosoite,
         ack_vastaus = i2c_ack(I2C_ACK_KIRJOITA);
     }
     i2c_lopeta();
+}
+
+
+/* Pingaa laitetta ja katso vastaako se. */
+uint8_t pcf8582_ping(uint8_t laiteosoite)
+{
+    uint8_t ack_vastaus;
+    i2c_setup(I2C_MOODI_SOFTAKELLO);
+    i2c_aloita();
+    i2c_kirjoita(laiteosoite);
+    ack_vastaus = i2c_ack(I2C_ACK_LUE);
+    i2c_lopeta();
+    return(ack_vastaus);
 }

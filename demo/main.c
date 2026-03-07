@@ -7,27 +7,27 @@
 
 void main(void)
 {
-    uint8_t data_buff_kirjoita[] = {0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF};
+    uint8_t data_buff_kirjoita[] = {
+        0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88,
+        0x99, 0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF, 0x00,
+        1<<0, 1<<1, 1<<2, 1<<3
+    };
     uint8_t laite_osoite = 0xA0;
     uint8_t laite_muistiosoite = 0x00;
-    uint8_t data_buff_lue[6];
+    uint8_t data_buff_lue[20];
+    // Katsotaan että laite vastaa kun pingataan
+    uint8_t ping_vastaus;
+    ping_vastaus = pcf8582_ping(laite_osoite);
+    pcf8582_ping(ping_vastaus);
+    // Katsotaan että laite ei vastaa muihin pingeihin
+    ping_vastaus = pcf8582_ping(laite_osoite + 0x0E);
+    pcf8582_ping(ping_vastaus);
     // Kirjoita databufferi laitteelle
-    pcf8582_kirjoita_bufferi(laite_osoite, laite_muistiosoite, data_buff_kirjoita, 6);
-    // Laitteella menee ~63 ms kirjoittamiseen
-    _delay_ms(64);
-    // Lue datan muisti, ekalla lukukerralla ulos pitäisi tulla
-    // aiemmin kirjoitettu data, ja jälkimmäisten kutsujen pitäisi
-    // kirjoittaa samat arvot vanhojen päälle ts.
-    // data_buff_lue = data_buff_kirjoita
-    // data_buff_lue[1:] = data_buff_kirjoita[1:]
-    // data_buff_lue[2:] = data_buff_kirjoita[2:]
-    // data_buff_lue[3:] = data_buff_kirjoita[3:]
-    pcf8582_lue_bufferi(laite_osoite,   laite_muistiosoite,   data_buff_lue, 6);
-    pcf8582_lue_bufferi(laite_osoite+1, laite_muistiosoite+1, data_buff_lue, 5);
-    pcf8582_lue_bufferi(laite_osoite+2, laite_muistiosoite+2, data_buff_lue, 4);
-    pcf8582_lue_bufferi(laite_osoite+3, laite_muistiosoite+3, data_buff_lue, 3);
-    // Kirjoita luettu data (tarkistetaan että onhan data_buff_lue == data_buff_kirjoita)
-    pcf8582_kirjoita_bufferi(laite_osoite, laite_muistiosoite, data_buff_lue, 6);
+    pcf8582_kirjoita_bufferi(laite_osoite, laite_muistiosoite, data_buff_kirjoita, 20);
+    // Lue laitteen muistista, pitäisi olla samat mitä just kirjoitettiin
+    pcf8582_lue_bufferi(laite_osoite,   laite_muistiosoite,   data_buff_lue, 20);
+    // Kirjoita osa luetusta datasta (katso että menihän data bufferiin)
+    pcf8582_kirjoita_bufferi(laite_osoite, laite_muistiosoite, data_buff_lue, 3);
     for(;;){
         __asm__("nop");
     }
