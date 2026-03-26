@@ -7,24 +7,24 @@
 
 /* USI sijainti vaihtelee tinymallin mukaan */
 /* ATtiny85 */
-#ifdef (__AVR_ATtiny85__)
-#define I2C_PIN_SDA          PINB0
-#define I2C_PIN_SCL          PINB2
-#define I2C_DDR              DDRB
-#define I2C_PINREG           PINB
-#define I2C_PORTREG          PORTB
+#ifdef __AVR_ATtiny85__
+    #define I2C_PIN_SDA          PINB0
+    #define I2C_PIN_SCL          PINB2
+    #define I2C_DDR              DDRB
+    #define I2C_PINREG           PINB
+    #define I2C_PORTREG          PORTB
 
 /* ATtiny2313 */
-#elif defined (__AVR_ATtiny2313__)
-#define I2C_PIN_SDA          PINB5
-#define I2C_PIN_SCL          PINB7
-#define I2C_DDR              DDRB
-#define I2C_PINREG           PINB
-#define I2C_PORTREG          PORTB
+#elif defined __AVR_ATtiny2313__
+    #define I2C_PIN_SDA          PINB5
+    #define I2C_PIN_SCL          PINB7
+    #define I2C_DDR              DDRB
+    #define I2C_PINREG           PINB
+    #define I2C_PORTREG          PORTB
 
 /* Tuntematon (ei mul ole kuin näitä kahta) */
 #else
-#   error "Arkkitehtuuria ei määritelty tai ei tueta!"
+    #error "Arkkitehtuuria ei määritelty tai ei tueta!"
 #endif
 
 #define I2C_MASK_SDA         (1<<I2C_PIN_SDA)

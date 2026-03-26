@@ -29,4 +29,6 @@ i2c_setup:
     OUT USICR,R24
     LDI R18,0xFF
     OUT USIBR,R18
+    LDI R18,I2C_USISR_CLR
+    OUT USISR,R18
     RET
